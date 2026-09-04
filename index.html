@@ -1,0 +1,993 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chronos Maison — Haute Timepiece Boutique</title>
+    
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' fill='%230b0b0b'/><text x='50%' y='55%' dominant-baseline='middle' text-anchor='middle' fill='%23d4af37' font-family='Cormorant Garamond, serif' font-size='50' font-weight='500'>CM</text></svg>">
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        onyx: '#0b0b0b',
+                        onyxLight: '#141414',
+                        onyxCard: '#1a1a1a',
+                        champagne: '#d4af37',
+                        champagneHover: '#e5c158',
+                        champagneDark: '#b89726',
+                        ivory: '#f4f1ea',
+                        ivoryMuted: '#b3b0a9'
+                    },
+                    fontFamily: {
+                        serif: ['"Cormorant Garamond"', 'serif'],
+                        sans: ['Inter', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Inter:wght@200;300;400;500;600&display=swap" rel="stylesheet">
+    
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <style>
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #0b0b0b;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #2a2a2a;
+            border-radius: 4px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #d4af37;
+        }
+
+        /* Modal animations */
+        .modal-backdrop {
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease-in-out;
+        }
+        .modal-backdrop.active {
+            opacity: 1;
+            pointer-events: auto;
+        }
+        .modal-content {
+            transform: scale(0.95);
+            opacity: 0;
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .modal-backdrop.active .modal-content {
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        /* Magnifying hover effect */
+        .zoom-container {
+            overflow: hidden;
+        }
+        .zoom-image {
+            transition: transform 0.6s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+        .zoom-container:hover .zoom-image {
+            transform: scale(1.08);
+        }
+    </style>
+</head>
+<body class="bg-onyx text-ivory font-sans antialiased selection:bg-champagne selection:text-onyx">
+
+    <header id="site-header" class="fixed top-0 left-0 w-full z-50 bg-onyx/90 backdrop-blur-md border-b border-champagne/10 transition-all duration-300">
+        <div class="max-w-7xl mx-auto px-6 h-20 flex items-center justify-between">
+            <a href="#hero" class="flex items-center gap-3 group">
+                <div class="w-10 h-10 border border-champagne/40 flex items-center justify-center bg-onyxLight transition-colors duration-300 group-hover:border-champagne">
+                    <span class="font-serif text-champagne text-xl tracking-widest">CM</span>
+                </div>
+                <div class="flex flex-col">
+                    <span class="font-serif text-lg tracking-widest text-ivory group-hover:text-champagne transition-colors">CHRONOS MAISON</span>
+                    <span class="text-[9px] tracking-[0.25em] text-ivoryMuted uppercase">Haute Timepiece Boutique</span>
+                </div>
+            </a>
+
+            <nav class="hidden lg:flex items-center gap-8">
+                <a href="#collection" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Collection</a>
+                <a href="#heritage" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Heritage</a>
+                <a href="#authentication" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Authentication</a>
+                <a href="#consign" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Consign</a>
+                <a href="#appointment" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Private Viewing</a>
+                <a href="#inquiry" class="text-xs uppercase tracking-widest text-ivoryMuted hover:text-champagne transition-colors">Contact</a>
+            </nav>
+
+            <div class="hidden lg:flex items-center gap-4">
+                <button onclick="openModal('Private Viewing Request', 'Our concierge will contact you shortly to reserve your private salon time.')" class="border border-champagne/60 text-champagne hover:bg-champagne hover:text-onyx text-xs tracking-widest uppercase px-5 py-2.5 transition-all duration-300">
+                    Book Viewing
+                </button>
+            </div>
+
+            <button id="mobile-menu-btn" class="lg:hidden text-champagne focus:outline-none p-2">
+                <i data-lucide="menu" class="w-6 h-6"></i>
+            </button>
+        </div>
+
+        <div id="mobile-menu" class="hidden lg:hidden bg-onyxLight border-b border-champagne/20 px-6 py-6 flex flex-col gap-4">
+            <a href="#collection" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Collection</a>
+            <a href="#heritage" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Heritage</a>
+            <a href="#authentication" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Authentication</a>
+            <a href="#consign" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Consign</a>
+            <a href="#appointment" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Private Viewing</a>
+            <a href="#inquiry" class="mobile-link text-sm uppercase tracking-widest text-ivoryMuted hover:text-champagne py-1">Contact</a>
+            <button onclick="openModal('Private Viewing Request', 'Our concierge will contact you shortly.'); toggleMobileMenu();" class="mt-2 w-full border border-champagne text-champagne hover:bg-champagne hover:text-onyx text-xs tracking-widest uppercase py-3 transition-all">
+                Book Viewing
+            </button>
+        </div>
+    </header>
+
+    <section id="hero" class="relative min-h-screen flex items-center justify-center pt-20 overflow-hidden">
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&q=80&w=2000" alt="Luxury Watch Macro" class="w-full h-full object-cover opacity-45 scale-105 transition-transform duration-1000 ease-out" id="hero-bg">
+            <div class="absolute inset-0 bg-gradient-to-t from-onyx via-onyx/50 to-transparent"></div>
+        </div>
+        
+        <div class="relative z-10 max-w-5xl mx-auto px-6 text-center py-24">
+            <span class="text-champagne tracking-[0.4em] text-xs uppercase mb-4 block">Museum-Grade Horology</span>
+            <h1 class="font-serif text-5xl md:text-7xl lg:text-8xl tracking-wide text-ivory mb-6 font-light leading-tight">
+                Time Honored, <br><span class="italic text-champagne">Uncompromised.</span>
+            </h1>
+            <p class="max-w-xl mx-auto text-ivoryMuted text-sm md:text-base font-light tracking-wide mb-10">
+                Purveyors of ultra-rare, museum-grade vintage and contemporary timepieces for the discerning collector.
+            </p>
+            <div class="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <a href="#appointment" class="w-full sm:w-auto bg-champagne text-onyx font-medium px-8 py-4 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                    Book Private Viewing
+                </a>
+                <a href="#collection" class="w-full sm:w-auto border border-champagne/40 text-ivory px-8 py-4 text-xs uppercase tracking-[0.25em] hover:border-champagne transition-colors">
+                    Explore Vault
+                </a>
+            </div>
+        </div>
+        <div class="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 animate-bounce text-champagne/60">
+            <i data-lucide="chevron-down" class="w-6 h-6"></i>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="heritage" class="py-28 px-6 bg-onyxLight relative">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="zoom-container relative aspect-[4/5] border border-champagne/20">
+                <img src="https://images.unsplash.com/photo-1547996160-81dfa63595aa?auto=format&fit=crop&q=80&w=1200" alt="Watchmaking Heritage" class="zoom-image w-full h-full object-cover">
+                <div class="absolute bottom-6 right-6 bg-onyx/90 border border-champagne/30 p-4 max-w-xs">
+                    <p class="font-serif italic text-champagne text-sm">"Every scratch tells a century of human achievement."</p>
+                </div>
+            </div>
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">The Maison Philosophy</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Guardians of Mechanical Artistry</h2>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-6 text-sm md:text-base">
+                    Founded in Geneva and curated globally, Chronos Maison operates at the pinnacle of luxury horological curation. We do not merely buy and sell watches; we preserve historical milestones of mechanical mastery.
+                </p>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-8 text-sm md:text-base">
+                    Each piece in our vault undergoes exhaustive archival research and verification by our master watchmakers, ensuring absolute provenance and unblemished authenticity.
+                </p>
+                <div class="grid grid-cols-3 gap-6 pt-6 border-t border-champagne/20">
+                    <div>
+                        <span class="font-serif text-3xl md:text-4xl text-champagne block mb-1">100%</span>
+                        <span class="text-xs uppercase tracking-wider text-ivoryMuted">Authenticated</span>
+                    </div>
+                    <div>
+                        <span class="font-serif text-3xl md:text-4xl text-champagne block mb-1">35+</span>
+                        <span class="text-xs uppercase tracking-wider text-ivoryMuted">Years Expertise</span>
+                    </div>
+                    <div>
+                        <span class="font-serif text-3xl md:text-4xl text-champagne block mb-1">Global</span>
+                        <span class="text-xs uppercase tracking-wider text-ivoryMuted">Concierge Network</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="collection" class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex flex-col md:flex-row md:items-end justify-between mb-16">
+                <div>
+                    <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Exquisite Categories</span>
+                    <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory font-light">The Curated Vault</h2>
+                </div>
+                <p class="text-ivoryMuted text-sm max-w-sm mt-4 md:mt-0 font-light">
+                    Explore our premier classifications featuring elite maisons renowned for groundbreaking complications.
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="zoom-container group relative bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between h-[450px] cursor-pointer" onclick="openModal('Collection Inquiry', 'Thank you for your interest in our Rolex Heritage Selection. A specialist will reach out.')">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1522335789203-aabd1fc54bc9?auto=format&fit=crop&q=80&w=1000" alt="Rolex Style" class="zoom-image w-full h-full object-cover opacity-35">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyxCard via-onyxCard/80 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="text-xs tracking-[0.2em] uppercase text-champagne border border-champagne/40 px-3 py-1">Pinnacle</span>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-champagne transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-serif text-3xl text-ivory mb-2">Vintage Rolex Sports</h3>
+                        <p class="text-ivoryMuted text-xs font-light mb-4">Submariner, Daytona & GMT Master references from the golden era.</p>
+                        <span class="text-xs uppercase tracking-widest text-champagne font-medium flex items-center gap-2">Inquire Availability <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                </div>
+
+                <div class="zoom-container group relative bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between h-[450px] cursor-pointer" onclick="openModal('Collection Inquiry', 'Thank you for your interest in our Patek Philippe Grand Complications.')">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1509042239860-f550ce710b93?auto=format&fit=crop&q=80&w=1000" alt="Patek Style" class="zoom-image w-full h-full object-cover opacity-35">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyxCard via-onyxCard/80 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="text-xs tracking-[0.2em] uppercase text-champagne border border-champagne/40 px-3 py-1">Grand Complication</span>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-champagne transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-serif text-3xl text-ivory mb-2">Patek Philippe Masters</h3>
+                        <p class="text-ivoryMuted text-xs font-light mb-4">Perpetual calendars, minute repeaters and rare vintage Calatravas.</p>
+                        <span class="text-xs uppercase tracking-widest text-champagne font-medium flex items-center gap-2">Inquire Availability <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                </div>
+
+                <div class="zoom-container group relative bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between h-[450px] cursor-pointer" onclick="openModal('Collection Inquiry', 'Thank you for your interest in our Audemars Piguet Royal Oak vault.')">
+                    <div class="absolute inset-0 z-0 overflow-hidden">
+                        <img src="https://images.unsplash.com/photo-1533139502658-0198f920d8e8?auto=format&fit=crop&q=80&w=1000" alt="AP Style" class="zoom-image w-full h-full object-cover opacity-35">
+                        <div class="absolute inset-0 bg-gradient-to-t from-onyxCard via-onyxCard/80 to-transparent"></div>
+                    </div>
+                    <div class="relative z-10 flex justify-between items-start">
+                        <span class="text-xs tracking-[0.2em] uppercase text-champagne border border-champagne/40 px-3 py-1">Avant-Garde</span>
+                        <i data-lucide="arrow-up-right" class="w-5 h-5 text-champagne transition-transform group-hover:translate-x-1 group-hover:-translate-y-1"></i>
+                    </div>
+                    <div class="relative z-10">
+                        <h3 class="font-serif text-3xl text-ivory mb-2">Audemars Piguet Icons</h3>
+                        <p class="text-ivoryMuted text-xs font-light mb-4">Jumbo ultra-thin references and rare skeletonized masterpieces.</p>
+                        <span class="text-xs uppercase tracking-widest text-champagne font-medium flex items-center gap-2">Inquire Availability <i data-lucide="chevron-right" class="w-4 h-4"></i></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="arrivals" class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Just Acquired</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">New Arrivals Gallery</h2>
+                <p class="text-ivoryMuted text-sm font-light">Recently curated masterworks freshly admitted into our private holdings.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                <div class="group bg-onyx border border-champagne/20 p-4 flex flex-col justify-between">
+                    <div class="zoom-container aspect-square mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1524805444758-089113d48a6d?auto=format&fit=crop&q=80&w=800" alt="Watch 1" class="zoom-image w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-onyx/90 text-champagne text-[10px] uppercase tracking-widest px-2.5 py-1 border border-champagne/30">1968 Ref.</span>
+                    </div>
+                    <div>
+                        <span class="text-ivoryMuted text-[10px] tracking-widest uppercase block mb-1">Rolex Submariner</span>
+                        <h4 class="font-serif text-lg text-ivory mb-2">Ref. 5513 Meters First</h4>
+                        <div class="flex items-center justify-between pt-3 border-t border-champagne/10">
+                            <span class="text-champagne text-xs font-semibold tracking-wider">Price Upon Request</span>
+                            <button onclick="openModal('Acquisition Request', 'We have noted your interest in the Rolex Submariner Ref. 5513.')" class="text-xs uppercase tracking-widest text-ivory hover:text-champagne underline">Reserve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-onyx border border-champagne/20 p-4 flex flex-col justify-between">
+                    <div class="zoom-container aspect-square mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1539185441755-769473a23570?auto=format&fit=crop&q=80&w=800" alt="Watch 2" class="zoom-image w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-onyx/90 text-champagne text-[10px] uppercase tracking-widest px-2.5 py-1 border border-champagne/30">1992 Ref.</span>
+                    </div>
+                    <div>
+                        <span class="text-ivoryMuted text-[10px] tracking-widest uppercase block mb-1">Audemars Piguet</span>
+                        <h4 class="font-serif text-lg text-ivory mb-2">Royal Oak Jumbo 14020</h4>
+                        <div class="flex items-center justify-between pt-3 border-t border-champagne/10">
+                            <span class="text-champagne text-xs font-semibold tracking-wider">Price Upon Request</span>
+                            <button onclick="openModal('Acquisition Request', 'We have noted your interest in the AP Royal Oak Jumbo.')" class="text-xs uppercase tracking-widest text-ivory hover:text-champagne underline">Reserve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-onyx border border-champagne/20 p-4 flex flex-col justify-between">
+                    <div class="zoom-container aspect-square mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1542496658-e33a6d0d50f6?auto=format&fit=crop&q=80&w=800" alt="Watch 3" class="zoom-image w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-onyx/90 text-champagne text-[10px] uppercase tracking-widest px-2.5 py-1 border border-champagne/30">2005 Ref.</span>
+                    </div>
+                    <div>
+                        <span class="text-ivoryMuted text-[10px] tracking-widest uppercase block mb-1">Patek Philippe</span>
+                        <h4 class="font-serif text-lg text-ivory mb-2">Calatrava 5196G</h4>
+                        <div class="flex items-center justify-between pt-3 border-t border-champagne/10">
+                            <span class="text-champagne text-xs font-semibold tracking-wider">Price Upon Request</span>
+                            <button onclick="openModal('Acquisition Request', 'We have noted your interest in the Patek Philippe Calatrava.')" class="text-xs uppercase tracking-widest text-ivory hover:text-champagne underline">Reserve</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="group bg-onyx border border-champagne/20 p-4 flex flex-col justify-between">
+                    <div class="zoom-container aspect-square mb-4 relative">
+                        <img src="https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?auto=format&fit=crop&q=80&w=800" alt="Watch 4" class="zoom-image w-full h-full object-cover">
+                        <span class="absolute top-3 left-3 bg-onyx/90 text-champagne text-[10px] uppercase tracking-widest px-2.5 py-1 border border-champagne/30">1974 Ref.</span>
+                    </div>
+                    <div>
+                        <span class="text-ivoryMuted text-[10px] tracking-widest uppercase block mb-1">Vacheron Constantin</span>
+                        <h4 class="font-serif text-lg text-ivory mb-2">Vintage Ultra-Thin Dress</h4>
+                        <div class="flex items-center justify-between pt-3 border-t border-champagne/10">
+                            <span class="text-champagne text-xs font-semibold tracking-wider">Price Upon Request</span>
+                            <button onclick="openModal('Acquisition Request', 'We have noted your interest in the Vacheron Constantin piece.')" class="text-xs uppercase tracking-widest text-ivory hover:text-champagne underline">Reserve</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="authentication" class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Absolute Rigor</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Authentication & Certification</h2>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-8 text-sm md:text-base">
+                    Every timepiece admitted to Chronos Maison undergoes a rigorous 6-stage forensic examination. Using high-magnification spectrometry, movement amplitude analysis, and archival cross-referencing, we guarantee 100% authenticity.
+                </p>
+                <div class="space-y-6">
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full border border-champagne flex items-center justify-center text-champagne font-serif text-sm flex-shrink-0 mt-1">1</div>
+                        <div>
+                            <h4 class="font-serif text-xl text-ivory mb-1">Archival Provenance Verification</h4>
+                            <p class="text-ivoryMuted text-xs font-light">Cross-referencing serial registries and original factory ledgers.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full border border-champagne flex items-center justify-center text-champagne font-serif text-sm flex-shrink-0 mt-1">2</div>
+                        <div>
+                            <h4 class="font-serif text-xl text-ivory mb-1">Non-Destructive Metallurgical Assay</h4>
+                            <p class="text-ivoryMuted text-xs font-light">Ensuring case metal purity and verifying unpolished chamfers.</p>
+                        </div>
+                    </div>
+                    <div class="flex items-start gap-4">
+                        <div class="w-8 h-8 rounded-full border border-champagne flex items-center justify-center text-champagne font-serif text-sm flex-shrink-0 mt-1">3</div>
+                        <div>
+                            <h4 class="font-serif text-xl text-ivory mb-1">Chronometric Bench Testing</h4>
+                            <p class="text-ivoryMuted text-xs font-light">State-of-the-art Witschi timing machine calibration across 6 positions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="zoom-container relative aspect-[4/5] border border-champagne/20">
+                <img src="https://images.unsplash.com/photo-1511556532299-8f662fc26c06?auto=format&fit=crop&q=80&w=1200" alt="Watch Authentication" class="zoom-image w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Dual Philosophy</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Vintage vs. Modern Collections</h2>
+                <p class="text-ivoryMuted text-sm font-light">Balancing soulful historical patinas with cutting-edge material sciences.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div class="relative bg-onyx border border-champagne/20 p-10 flex flex-col justify-between h-[480px]">
+                    <div class="absolute inset-0 z-0 overflow-hidden opacity-25">
+                        <img src="https://images.unsplash.com/photo-1507679799987-c73779587ccf?auto=format&fit=crop&q=80&w=1000" alt="Vintage" class="w-full h-full object-cover">
+                    </div>
+                    <div class="relative z-10">
+                        <span class="text-xs uppercase tracking-[0.3em] text-champagne block mb-2">1950s — 1980s</span>
+                        <h3 class="font-serif text-4xl text-ivory mb-4">The Vintage Soul</h3>
+                        <p class="text-ivoryMuted text-sm font-light leading-relaxed mb-6">
+                            Characterized by tritium patinas, acrylic crystals, and hand-wound calibers that carry the unmistakable warmth of decades past. Every imperfection is a testament to its journey.
+                        </p>
+                    </div>
+                    <div class="relative z-10 pt-6 border-t border-champagne/20 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-ivory">For the purist collector</span>
+                        <button onclick="openModal('Vintage Inquiry', 'A vintage consultant will contact you.')" class="text-xs uppercase tracking-widest text-champagne hover:underline">Explore Vintage &rarr;</button>
+                    </div>
+                </div>
+
+                <div class="relative bg-onyx border border-champagne/20 p-10 flex flex-col justify-between h-[480px]">
+                    <div class="absolute inset-0 z-0 overflow-hidden opacity-25">
+                        <img src="https://images.unsplash.com/photo-1511300636408-a63a89df3482?auto=format&fit=crop&q=80&w=1000" alt="Modern" class="w-full h-full object-cover">
+                    </div>
+                    <div class="relative z-10">
+                        <span class="text-xs uppercase tracking-[0.3em] text-champagne block mb-2">2000s — Present</span>
+                        <h3 class="font-serif text-4xl text-ivory mb-4">Modern Innovation</h3>
+                        <p class="text-ivoryMuted text-sm font-light leading-relaxed mb-6">
+                            Utilizing advanced ceramics, silicium hairsprings, and ultra-resistant sapphire crystals. Engineered for extreme precision and robust daily wear without sacrificing supreme elegance.
+                        </p>
+                    </div>
+                    <div class="relative z-10 pt-6 border-t border-champagne/20 flex items-center justify-between">
+                        <span class="text-xs uppercase tracking-widest text-ivory">For the technical connoisseur</span>
+                        <button onclick="openModal('Modern Inquiry', 'A modern specialist will contact you.')" class="text-xs uppercase tracking-widest text-champagne hover:underline">Explore Modern &rarr;</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="consign" class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Private Consignment</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Sell or Consign Your Timepiece</h2>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-6 text-sm md:text-base">
+                    Entrust your exceptional watch to the world’s most discreet brokerage network. We offer immediate liquidity through direct acquisition or maximum return via our private global client base.
+                </p>
+                <ul class="space-y-4 text-sm text-ivoryMuted mb-8 font-light">
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-champagne"><span>Fully insured door-to-door secure courier pickup</span></i></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-champagne"><span>Discreet, confidential transactions & rapid payouts</span></i></li>
+                    <li class="flex items-center gap-3"><i data-lucide="check" class="w-4 h-4 text-champagne"><span>Zero upfront listing fees for qualifying masterpieces</span></i></li>
+                </ul>
+            </div>
+            
+            <div class="bg-onyxLight border border-champagne/20 p-8">
+                <h3 class="font-serif text-2xl text-ivory mb-6">Consignment Appraisal Request</h3>
+                <form id="consign-form" onsubmit="handleFormSubmit(event, 'Consignment Request', 'Your watch details have been submitted securely. Our acquisitions director will respond within 4 hours.')" class="space-y-4">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Watch Brand & Reference</label>
+                        <input type="text" required placeholder="e.g., Rolex Daytona 116500LN" class="w-full bg-onyx border border-champagne/30 px-4 py-3 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                    <div class="grid grid-cols-2 gap-4">
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Year of Production</label>
+                            <input type="text" placeholder="e.g., 2018" class="w-full bg-onyx border border-champagne/30 px-4 py-3 text-ivory text-sm focus:outline-none focus:border-champagne">
+                        </div>
+                        <div>
+                            <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Includes Box & Papers?</label>
+                            <select class="w-full bg-onyx border border-champagne/30 px-4 py-3 text-ivory text-sm focus:outline-none focus:border-champagne">
+                                <option>Complete Set</option>
+                                <option>Watch Only</option>
+                                <option>Service Papers Only</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Your Email</label>
+                        <input type="email" required placeholder="collector@domain.com" class="w-full bg-onyx border border-champagne/30 px-4 py-3 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                    <button type="submit" class="w-full bg-champagne text-onyx font-medium py-3.5 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                        Submit for Valuation
+                    </button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div class="zoom-container relative aspect-[4/5] border border-champagne/20 order-2 lg:order-1">
+                <img src="https://images.unsplash.com/photo-1534447677768-be436bb09401?auto=format&fit=crop&q=80&w=1200" alt="Watchmaker Restoration" class="zoom-image w-full h-full object-cover">
+            </div>
+            <div class="order-1 lg:order-2">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Master Restoration</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Horological Restoration Services</h2>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-6 text-sm md:text-base">
+                    Our atelier is equipped with Swiss-certified machinery and staffed by master horologists trained in the restoration of antique pocket watches and mid-century complications.
+                </p>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-8 text-sm md:text-base">
+                    We adhere strictly to conservation principles: preserving original components, refraining from abrasive case polishing unless explicitly requested, and hand-crafting obsolete parts when necessary.
+                </p>
+                <button onclick="openModal('Service Request', 'Our lead watchmaker will contact you to discuss your restoration needs.')" class="border border-champagne text-champagne hover:bg-champagne hover:text-onyx px-8 py-3.5 text-xs uppercase tracking-[0.25em] transition-all duration-300">
+                    Request Service Consultation
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Patronage</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Client Testimonials</h2>
+                <p class="text-ivoryMuted text-sm font-light">Words from our esteemed global patrons and institutional collectors.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-champagne mb-4 flex gap-1">★★★★★</div>
+                        <p class="font-serif italic text-ivory text-lg mb-6 leading-relaxed">
+                            "Chronos Maison secured a museum-grade 1952 Patek Philippe for my private foundation with absolute discretion and peerless expertise."
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-champagne/10">
+                        <span class="font-serif text-ivory block">Lord Alistair C.</span>
+                        <span class="text-xs uppercase tracking-widest text-ivoryMuted">London & Geneva</span>
+                    </div>
+                </div>
+
+                <div class="bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-champagne mb-4 flex gap-1">★★★★★</div>
+                        <p class="font-serif italic text-ivory text-lg mb-6 leading-relaxed">
+                            "The authentication rigor here is second to none. Buying vintage luxury online has never felt this secure and sophisticated."
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-champagne/10">
+                        <span class="font-serif text-ivory block">Elena V.</span>
+                        <span class="text-xs uppercase tracking-widest text-ivoryMuted">Zurich</span>
+                    </div>
+                </div>
+
+                <div class="bg-onyxCard border border-champagne/20 p-8 flex flex-col justify-between">
+                    <div>
+                        <div class="text-champagne mb-4 flex gap-1">★★★★★</div>
+                        <p class="font-serif italic text-ivory text-lg mb-6 leading-relaxed">
+                            "Their private viewing salon in Geneva is an oasis for any true horology lover. Exceptional hospitality and extraordinary stock."
+                        </p>
+                    </div>
+                    <div class="pt-4 border-t border-champagne/10">
+                        <span class="font-serif text-ivory block">Marcus D.</span>
+                        <span class="text-xs uppercase tracking-widest text-ivoryMuted">New York</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="appointment" class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-4xl mx-auto bg-onyx border border-champagne/30 p-10 md:p-16 relative">
+            <div class="text-center max-w-xl mx-auto mb-12">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Exclusive Access</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Book a Private Viewing</h2>
+                <p class="text-ivoryMuted text-sm font-light">Reserve a confidential appointment at our private salons in Geneva, New York, or Tokyo.</p>
+            </div>
+
+            <form id="appointment-form" onsubmit="handleFormSubmit(event, 'Private Appointment Confirmed', 'Your viewing has been requested. Our concierge will send your invitation and security clearance details shortly.')" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Full Name</label>
+                        <input type="text" required placeholder="Lord / Madam..." class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Email Address</label>
+                        <input type="email" required placeholder="collector@domain.com" class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Salon Location</label>
+                        <select class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                            <option>Geneva Salon</option>
+                            <option>New York Salon</option>
+                            <option>Tokyo Salon</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Preferred Date</label>
+                        <input type="date" required class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Specific Interest</label>
+                        <input type="text" placeholder="e.g., Vintage Rolex" class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                </div>
+                <button type="submit" class="w-full bg-champagne text-onyx font-medium py-4 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors mt-4">
+                    Confirm Private Booking
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Master of Time</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Jean-Luc Moreau</h2>
+                <h4 class="text-champagne text-sm uppercase tracking-widest mb-6">Head of Horological Conservation</h4>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-6 text-sm md:text-base">
+                    With over four decades spent at the bench of Switzerland’s most revered complications workshops, Master Jean-Luc Moreau leads our restoration and authentication divisions with unmatched precision.
+                </p>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-8 text-sm md:text-base">
+                    "A watch is a living organism of steel, gold, and rubies. To understand it, one must listen to the rhythm of the escapement before ever touching a tool."
+                </p>
+                <div class="flex items-center gap-6">
+                    <div>
+                        <span class="font-serif text-2xl text-champagne block">WOSTEP</span>
+                        <span class="text-[10px] tracking-widest uppercase text-ivoryMuted">Certified Master</span>
+                    </div>
+                    <div class="h-8 w-px bg-champagne/20"></div>
+                    <div>
+                        <span class="font-serif text-2xl text-champagne block">40 Years</span>
+                        <span class="text-[10px] tracking-widest uppercase text-ivoryMuted">Bench Experience</span>
+                    </div>
+                </div>
+            </div>
+            <div class="zoom-container relative aspect-[4/5] border border-champagne/20">
+                <img src="https://images.unsplash.com/photo-1512496015851-a90fb38ba796?auto=format&fit=crop&q=80&w=1200" alt="Master Horologist" class="zoom-image w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Market Intelligence</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Horological Investment Guide</h2>
+                <p class="text-ivoryMuted text-sm font-light">Anomalies and trends in rare mechanical asset valuation.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="bg-onyx border border-champagne/20 p-8">
+                    <span class="text-champagne text-xs uppercase tracking-widest block mb-3 font-medium">Asset Class 01</span>
+                    <h3 class="font-serif text-2xl text-ivory mb-4">Discontinued Sports References</h3>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed mb-6">
+                        Out-of-production stainless steel sports models from the late 20th century continue to outperform traditional equities due to finite global supply.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest text-champagne font-semibold">High Liquidity &rarr;</span>
+                </div>
+
+                <div class="bg-onyx border border-champagne/20 p-8">
+                    <span class="text-champagne text-xs uppercase tracking-widest block mb-3 font-medium">Asset Class 02</span>
+                    <h3 class="font-serif text-2xl text-ivory mb-4">Independent Masterpieces</h3>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed mb-6">
+                        Independent artisans producing fewer than 100 pieces annually represent the fastest-growing sector for ultra-high-net-worth collectors.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest text-champagne font-semibold">Museum Appreciation &rarr;</span>
+                </div>
+
+                <div class="bg-onyx border border-champagne/20 p-8">
+                    <span class="text-champagne text-xs uppercase tracking-widest block mb-3 font-medium">Asset Class 03</span>
+                    <h3 class="font-serif text-2xl text-ivory mb-4">Complete Box & Papers Sets</h3>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed mb-6">
+                        The premium for untouched provenance—original guarantee certificates, hang tags, and presentation boxes—commands up to a 40% valuation premium.
+                    </p>
+                    <span class="text-xs uppercase tracking-widest text-champagne font-semibold">Maximal ROI &rarr;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-24 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto text-center">
+            <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-8 block">As Featured In</span>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 items-center opacity-70">
+                <span class="font-serif text-2xl md:text-3xl tracking-widest text-ivory">ROBBY REPORT</span>
+                <span class="font-serif text-2xl md:text-3xl tracking-widest text-ivory">FINANCIAL TIMES</span>
+                <span class="font-serif text-2xl md:text-3xl tracking-widest text-ivory">HODINKEE</span>
+                <span class="font-serif text-2xl md:text-3xl tracking-widest text-ivory">WATCHES & WONDERS</span>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Global Hunt</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Concierge Sourcing Service</h2>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-6 text-sm md:text-base">
+                    Seeking an elusive reference that never appears on the open market? Our private concierge network spans confidential estates, auction houses, and private vaults across 40 countries.
+                </p>
+                <p class="text-ivoryMuted font-light leading-relaxed mb-8 text-sm md:text-base">
+                    Provide your target reference and our acquisitions desk will discreetly locate and authenticate your holy grail timepiece.
+                </p>
+                <button onclick="openModal('Sourcing Request', 'Our global sourcing director has received your request and will contact you confidentially.')" class="bg-champagne text-onyx font-medium px-8 py-3.5 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                    Initiate Private Sourcing
+                </button>
+            </div>
+            <div class="zoom-container relative aspect-[4/5] border border-champagne/20">
+                <img src="https://images.unsplash.com/photo-1526045431048-f857369baa09?auto=format&fit=crop&q=80&w=1200" alt="Concierge Sourcing" class="zoom-image w-full h-full object-cover">
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyx">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Inquiries</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Frequently Asked Questions</h2>
+                <p class="text-ivoryMuted text-sm font-light">Everything you need to know about acquisition, shipping, and authentication.</p>
+            </div>
+
+            <div class="space-y-6">
+                <div class="bg-onyxCard border border-champagne/20 p-6">
+                    <h4 class="font-serif text-xl text-ivory mb-2">How are timepieces authenticated?</h4>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed">Every watch undergoes a 6-stage verification process including archival serial check, metallurgical assay, and Witschi chronometer testing by our master watchmakers.</p>
+                </div>
+                <div class="bg-onyxCard border border-champagne/20 p-6">
+                    <h4 class="font-serif text-xl text-ivory mb-2">Are shipments fully insured?</h4>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed">Yes. All shipments are dispatched via specialized secure armored couriers (Brink's or Malca-Amit) with 100% full-value transit insurance.</p>
+                </div>
+                <div class="bg-onyxCard border border-champagne/20 p-6">
+                    <h4 class="font-serif text-xl text-ivory mb-2">Can I sell or trade my current timepiece?</h4>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed">Certainly. We offer both direct immediate buyout and private global consignment options with competitive commission rates.</p>
+                </div>
+                <div class="bg-onyxCard border border-champagne/20 p-6">
+                    <h4 class="font-serif text-xl text-ivory mb-2">Do watches come with a warranty?</h4>
+                    <p class="text-ivoryMuted text-xs font-light leading-relaxed">All pieces purchased from Chronos Maison include a 2-year mechanical warranty certified by our in-house atelier.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-7xl mx-auto">
+            <div class="text-center max-w-2xl mx-auto mb-16">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Sanctuary of Time</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">The Showroom Gallery</h2>
+                <p class="text-ivoryMuted text-sm font-light">A glimpse inside our private salons in Geneva, New York, and Tokyo.</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="zoom-container aspect-[4/3] border border-champagne/20">
+                    <img src="https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&q=80&w=1000" alt="Geneva Salon" class="zoom-image w-full h-full object-cover">
+                </div>
+                <div class="zoom-container aspect-[4/3] border border-champagne/20">
+                    <img src="https://images.unsplash.com/photo-1441986300917-64674bd600d8?auto=format&fit=crop&q=80&w=1000" alt="New York Salon" class="zoom-image w-full h-full object-cover">
+                </div>
+                <div class="zoom-container aspect-[4/3] border border-champagne/20">
+                    <img src="https://images.unsplash.com/photo-1513694203232-719a280e022f?auto=format&fit=crop&q=80&w=1000" alt="Tokyo Salon" class="zoom-image w-full h-full object-cover">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-28 px-6 bg-onyx">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+            <div>
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Global Salons</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-6 font-light">Visit Our Salons</h2>
+                <div class="space-y-6 text-sm text-ivoryMuted font-light mb-8">
+                    <div>
+                        <strong class="text-ivory block font-serif text-lg mb-1">Geneva Flagship</strong>
+                        <p>Rue du Rhône 42, 1204 Genève, Switzerland</p>
+                    </div>
+                    <div>
+                        <strong class="text-ivory block font-serif text-lg mb-1">New York Private Gallery</strong>
+                        <p>East 57th Street, Penthouse 14, New York, NY 10022</p>
+                    </div>
+                    <div>
+                        <strong class="text-ivory block font-serif text-lg mb-1">Tokyo Salon</strong>
+                        <p>Ginza 6-chome, Chuo-ku, Tokyo 104-0061, Japan</p>
+                    </div>
+                </div>
+                <button onclick="openModal('Salon Access', 'Please specify your preferred city in your appointment request.')" class="border border-champagne text-champagne hover:bg-champagne hover:text-onyx px-8 py-3.5 text-xs uppercase tracking-[0.25em] transition-all">
+                    Request Salon Access
+                </button>
+            </div>
+            <div class="aspect-[4/3] border border-champagne/30 bg-onyxLight flex items-center justify-center relative overflow-hidden">
+                <img src="https://images.unsplash.com/photo-1524661135-423995f22d0b?auto=format&fit=crop&q=80&w=1000" alt="Map Representation" class="w-full h-full object-cover opacity-40">
+                <div class="absolute inset-0 bg-onyx/40 flex items-center justify-center">
+                    <span class="font-serif text-xl text-champagne tracking-widest border border-champagne px-6 py-3 bg-onyx/90">SECURE LOCATIONS BY APPOINTMENT</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section id="inquiry" class="py-28 px-6 bg-onyxLight">
+        <div class="max-w-3xl mx-auto bg-onyx border border-champagne/30 p-10 md:p-16">
+            <div class="text-center max-w-lg mx-auto mb-12">
+                <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">Direct Communication</span>
+                <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">General Inquiry</h2>
+                <p class="text-ivoryMuted text-sm font-light">Send a direct message to our client advisory team.</p>
+            </div>
+
+            <form id="general-inquiry-form" onsubmit="handleFormSubmit(event, 'Inquiry Received', 'Thank you for reaching out. A senior advisor will review your message and reply promptly.')" class="space-y-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Full Name</label>
+                        <input type="text" required placeholder="Your Name" class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                    <div>
+                        <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Email Address</label>
+                        <input type="email" required placeholder="collector@domain.com" class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                    </div>
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Subject / Reference</label>
+                    <input type="text" placeholder="e.g., Availability of Vintage Daytona" class="w-full bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                </div>
+                <div>
+                    <label class="block text-xs uppercase tracking-widest text-ivoryMuted mb-2">Message</label>
+                    <textarea rows="4" required placeholder="Your inquiry details..." class="w-full bg-onyxLight border border-champagne/30 p-4 text-ivory text-sm focus:outline-none focus:border-champagne"></textarea>
+                </div>
+                <button type="submit" class="w-full bg-champagne text-onyx font-medium py-4 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                    Send Secure Message
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <section class="py-24 px-6 bg-onyx">
+        <div class="max-w-3xl mx-auto text-center">
+            <span class="text-champagne tracking-[0.3em] text-xs uppercase mb-3 block">The Horological Gazette</span>
+            <h2 class="font-serif text-4xl md:text-5xl tracking-wide text-ivory mb-4 font-light">Join the Private Registry</h2>
+            <p class="text-ivoryMuted text-sm font-light mb-10 max-w-lg mx-auto">Receive confidential notifications when ultra-rare museum-grade timepieces are admitted to our vault.</p>
+            
+            <form id="newsletter-form" onsubmit="handleFormSubmit(event, 'Registry Subscribed', 'You have been successfully added to the Chronos Maison private registry.')" class="flex flex-col sm:flex-row gap-4 max-w-md mx-auto">
+                <input type="email" required placeholder="Enter your email address" class="flex-1 bg-onyxLight border border-champagne/30 px-4 py-3.5 text-ivory text-sm focus:outline-none focus:border-champagne">
+                <button type="submit" class="bg-champagne text-onyx font-medium px-8 py-3.5 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                    Subscribe
+                </button>
+            </form>
+        </div>
+    </section>
+
+    <hr class="border-champagne/10">
+
+    <footer class="bg-onyxLight py-16 px-6 border-t border-champagne/10">
+        <div class="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-12">
+            <div>
+                <div class="flex items-center gap-3 mb-6">
+                    <div class="w-8 h-8 border border-champagne/40 flex items-center justify-center bg-onyx">
+                        <span class="font-serif text-champagne text-sm tracking-widest">CM</span>
+                    </div>
+                    <span class="font-serif text-sm tracking-widest text-ivory">CHRONOS MAISON</span>
+                </div>
+                <p class="text-ivoryMuted text-xs font-light leading-relaxed mb-6">
+                    Purveyors of ultra-rare, museum-grade vintage and contemporary timepieces for the world's most discerning collectors.
+                </p>
+                <div class="flex gap-4 text-champagne">
+                    <a href="#" class="hover:text-ivory transition-colors"><i data-lucide="instagram" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-ivory transition-colors"><i data-lucide="linkedin" class="w-5 h-5"></i></a>
+                    <a href="#" class="hover:text-ivory transition-colors"><i data-lucide="twitter" class="w-5 h-5"></i></a>
+                </div>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg text-ivory mb-4">Navigation</h4>
+                <ul class="space-y-2 text-xs uppercase tracking-widest text-ivoryMuted">
+                    <li><a href="#collection" class="hover:text-champagne transition-colors">Collection</a></li>
+                    <li><a href="#heritage" class="hover:text-champagne transition-colors">Heritage</a></li>
+                    <li><a href="#authentication" class="hover:text-champagne transition-colors">Authentication</a></li>
+                    <li><a href="#consign" class="hover:text-champagne transition-colors">Consign</a></li>
+                    <li><a href="#appointment" class="hover:text-champagne transition-colors">Private Viewing</a></li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg text-ivory mb-4">Salons</h4>
+                <ul class="space-y-2 text-xs tracking-wider text-ivoryMuted">
+                    <li>Geneva Flagship</li>
+                    <li>New York Private Gallery</li>
+                    <li>Tokyo Ginza Salon</li>
+                    <li class="pt-2 text-champagne">concierge@chronosmaison.com</li>
+                </ul>
+            </div>
+
+            <div>
+                <h4 class="font-serif text-lg text-ivory mb-4">Legal & Privacy</h4>
+                <ul class="space-y-2 text-xs uppercase tracking-widest text-ivoryMuted">
+                    <li><a href="#" onclick="openModal('Terms of Service', 'All transactions are governed by Swiss horological trade laws and confidentiality agreements.')" class="hover:text-champagne transition-colors">Terms of Service</a></li>
+                    <li><a href="#" onclick="openModal('Privacy Policy', 'Your personal and collector data is encrypted and maintained under strict Swiss banking privacy standards.')" class="hover:text-champagne transition-colors">Privacy Policy</a></li>
+                    <li><a href="#" onclick="openModal('Authenticity Guarantee', 'Every piece carries our lifetime authenticity and provenance guarantee.')" class="hover:text-champagne transition-colors">Authenticity Guarantee</a></li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="max-w-7xl mx-auto pt-8 border-t border-champagne/10 flex flex-col md:flex-row items-center justify-between text-[11px] text-ivoryMuted tracking-widest uppercase">
+            <p>&copy; 2026 Chronos Maison S.A. All Rights Reserved.</p>
+            <p class="mt-4 md:mt-0 font-serif italic text-champagne text-sm">Horology Preserved.</p>
+        </div>
+    </footer>
+
+    <div id="custom-modal" class="modal-backdrop fixed inset-0 z-50 flex items-center justify-center bg-onyx/80 backdrop-blur-md px-4">
+        <div class="modal-content bg-onyxCard border border-champagne/50 p-8 md:p-12 max-w-md w-full text-center relative shadow-2xl">
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-ivoryMuted hover:text-champagne p-2">
+                <i data-lucide="x" class="w-5 h-5"></i>
+            </button>
+            <div class="w-12 h-12 border border-champagne mx-auto flex items-center justify-center bg-onyx mb-6 text-champagne">
+                <i data-lucide="check" class="w-6 h-6"></i>
+            </div>
+            <h3 id="modal-title" class="font-serif text-3xl text-ivory mb-3">Confirmation</h3>
+            <p id="modal-message" class="text-ivoryMuted text-sm font-light leading-relaxed mb-8">Your request has been successfully processed.</p>
+            <button onclick="closeModal()" class="w-full bg-champagne text-onyx font-medium py-3 text-xs uppercase tracking-[0.25em] hover:bg-champagneHover transition-colors">
+                Close
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // Initialize Lucide icons
+        lucide.createIcons();
+
+        // Mobile menu toggle
+        const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+        const mobileMenu = document.getElementById('mobile-menu');
+
+        function toggleMobileMenu() {
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        mobileMenuBtn.addEventListener('click', toggleMobileMenu);
+
+        // Close mobile menu when link clicked
+        document.querySelectorAll('.mobile-link').forEach(link => {
+            link.addEventListener('click', () => {
+                mobileMenu.classList.add('hidden');
+            });
+        });
+
+        // Slow parallax scroll effect for hero background
+        window.addEventListener('scroll', () => {
+            const scrollY = window.scrollY;
+            const heroBg = document.getElementById('hero-bg');
+            if (heroBg && scrollY <= window.innerHeight) {
+                heroBg.style.transform = `translateY(${scrollY * 0.25}px) scale(1.05)`;
+            }
+        });
+
+        // Modal Logic
+        const modal = document.getElementById('custom-modal');
+        const modalTitle = document.getElementById('modal-title');
+        const modalMessage = document.getElementById('modal-message');
+
+        function openModal(title, message) {
+            modalTitle.textContent = title;
+            modalMessage.textContent = message;
+            modal.classList.add('active');
+        }
+
+        function closeModal() {
+            modal.classList.remove('active');
+        }
+
+        // Form Submit handler preventing page reload
+        function handleFormSubmit(event, title, message) {
+            event.preventDefault();
+            openModal(title, message);
+            event.target.reset();
+        }
+
+        // Close modal on background click
+        modal.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Close modal on ESC key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+    </script>
+</body>
+</html>
